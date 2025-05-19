@@ -66,12 +66,25 @@ class DisqusSettingsForm extends Form {
 		return parent::fetch($request, $template, $display);
 	}
 
-	/**
-	 * Save settings.
-	 */
-	function execute() {
-		$this->plugin->updateSetting($this->contextId, 'disqusForumName', trim($this->getData('disqusForumName'), "\"\';"), 'string');
-	}
+
+/**
+ * Save settings.
+ *
+ * @param mixed …$functionArgs  Any arguments passed by the Form framework
+ * @return mixed               Whatever the parent returns (often a boolean)
+ */
+public function execute(...$functionArgs) {
+    // 1. Save your plugin’s own settings
+    $this->plugin->updateSetting(
+        $this->contextId,
+        'disqusForumName',
+        trim($this->getData('disqusForumName'), "\"';"),
+        'string'
+    );
+
+    // 2. Let the parent class do its thing (notifications, cache-busting, etc.)
+    return parent::execute(...$functionArgs);
+}
 }
 
 ?>
